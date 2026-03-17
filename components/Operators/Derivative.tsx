@@ -1,7 +1,6 @@
 import React from 'react';
 import {Rect, Svg, Text} from 'react-native-svg';
 import { View } from 'react-native';
-import limitNumber from "ajv/lib/vocabularies/validation/limitNumber";
 
 /**
  * DerivativeProps

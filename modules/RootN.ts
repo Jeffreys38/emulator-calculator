@@ -2,6 +2,7 @@ import { ExpressionTemplate, Scope } from "@/interfaces/Expression";
 import * as math from "mathjs";
 import CommonHelper from "@/helpers/CommonHelper";
 import { AdvancedOperations } from "@/constants/Operations";
+import {CalculatorError, CalculatorErrorCodes} from "@/helpers/CalculatorError";
 
 class RootN extends ExpressionTemplate {
     private _radicand: string;
@@ -52,6 +53,13 @@ class RootN extends ExpressionTemplate {
     }
 
     calculate(scope: Scope = { x: 0 }): number | string {
+        if (this._index === "☐" || this._radicand === "☐") {
+            throw new CalculatorError(
+                CalculatorErrorCodes.INCOMPLETE_EXPRESSION,
+                "Root expression is incomplete"
+            );
+        }
+
         // Fix: Added parentheses to index to ensure correct order of operations
         // e.g., (radicand)^(1/(index))
         const exp = `(${this._radicand})^(1/(${this._index}))`.replace(/\\times|\\modulus/g, '*');

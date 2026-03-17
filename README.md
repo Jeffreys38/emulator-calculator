@@ -58,5 +58,12 @@ This project serves as a foundational example of handling mathematical syntax tr
 2.  **Logic Separation**: Keep UI components separate from calculation logic (in `modules/`).
 3.  **Testing**: Verify edge cases for nested expressions (e.g., Fraction inside a Root).
 
+## ✅ Production-Readiness Improvements
+
+- Added typed calculator error codes (`INVALID_PARAMETER`, `INCOMPLETE_EXPRESSION`, `INVALID_EXPRESSION`, `EMPTY_EXPRESSION`) and standardized error logging for evaluation failures.
+- Fixed derivative parameter parsing edge case for `x = 0` and improved empty-expression handling in evaluation flow.
+- Added guardrails to prevent evaluating incomplete Fraction/Root expressions.
+- Added focused Jest tests for new expression guard logic to prevent regressions.
+
 ---
 *Maintained by [Jeffreys38](https://github.com/Jeffreys38)*

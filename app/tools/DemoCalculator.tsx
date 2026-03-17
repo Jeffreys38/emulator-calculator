@@ -9,6 +9,12 @@ import {Button} from "@/components/Button";
 import {ExpressionTemplate} from "@/interfaces/Expression";
 import {AdvancedOperations, CommonOperations} from "@/constants/Operations";
 import RootN from "@/modules/RootN";
+import {
+    CalculatorError,
+    CalculatorErrorCodes,
+    isCalculatorError,
+    logCalculatorError
+} from "@/helpers/CalculatorError";
 
 export default function DemoCalculator() {
     const [isDark, setIsDark] = useState(true);
@@ -178,25 +184,40 @@ export default function DemoCalculator() {
         try {
             let scope = {x: 0};
 
-            if (isShowParams && params != "") {
-                if (parseInt(params) || params == "0") {
-                    scope = {x: parseInt(params)}
-                } else {
-                    alert("Invalid expression");
-                    return;
+            if (isShowParams && params !== "") {
+                const parsedParam = Number.parseInt(params, 10);
+                if (Number.isNaN(parsedParam)) {
+                    throw new CalculatorError(
+                        CalculatorErrorCodes.INVALID_PARAMETER,
+                        "Invalid derivative parameter"
+                    );
                 }
+                scope = {x: parsedParam};
                 setShowParams(!isShowParams);
-                setParams("")
+                setParams("");
             }
 
 
             let fullExpression = expressions.map(expr => expr.calculate(scope)).join('');
-            fullExpression.replace(/([+*/-])/g, ' $1 ');
+            fullExpression = fullExpression.replace(/([+*/-])/g, ' $1 ').trim();
+            if (fullExpression.length === 0) {
+                throw new CalculatorError(
+                    CalculatorErrorCodes.EMPTY_EXPRESSION,
+                    "Expression is empty"
+                );
+            }
             const result =  math.evaluate(fullExpression, scope);
 
             setResult(result);
         } catch (error) {
-            setResult('Error in evaluate');
+            logCalculatorError("evaluateExpression", error, {
+                params,
+                expressionLength: expressions.length
+            });
+            const errorCode = isCalculatorError(error)
+                ? error.code
+                : CalculatorErrorCodes.INVALID_EXPRESSION;
+            setResult(`Error (${errorCode})`);
         }
     };
 
