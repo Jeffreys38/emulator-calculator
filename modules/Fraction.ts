@@ -2,6 +2,7 @@ import {ExpressionTemplate, Scope} from "@/interfaces/Expression";
 import * as math from "mathjs";
 import CommonHelper from "@/helpers/CommonHelper";
 import {AdvancedOperations} from "@/constants/Operations";
+import {CalculatorError, CalculatorErrorCodes} from "@/helpers/CalculatorError";
 
 class Fraction extends ExpressionTemplate {
     private _numerator: string;
@@ -48,6 +49,13 @@ class Fraction extends ExpressionTemplate {
     };
 
     calculate(scope: Scope = { x: 0 }): number | string {
+        if (this._numerator === "☐" || this._denominator === "☐") {
+            throw new CalculatorError(
+                CalculatorErrorCodes.INCOMPLETE_EXPRESSION,
+                "Fraction is incomplete"
+            );
+        }
+
         // Fix: Added parentheses to ensure correct order of operations
         // e.g., (1+2)/(3+4) instead of 1+2/3+4
         const exp = (`(${this._numerator})/(${this._denominator})`)
@@ -71,7 +79,6 @@ class Fraction extends ExpressionTemplate {
                 let exp1 = this.deleteOperator(this._numerator);
                 if (exp1 !== null){
                     this._numerator = exp1;
-                    console.log(this._numerator)
                     return;
                 }
                 this._numerator = this._numerator.slice(0, -1) || '☐'; // Remove the last character or reset to placeholder
