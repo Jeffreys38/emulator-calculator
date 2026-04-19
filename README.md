@@ -5,6 +5,7 @@
 ![Tech](https://img.shields.io/badge/tech-React%20Native%20%7C%20Expo%20%7C%20TypeScript-blue)
 
 **Emulator Calculator** is a professional-grade mobile application designed to handle complex mathematical expressions including Fractions, N-th Roots, and Derivatives. Built with React Native and Expo, it provides a seamless cross-platform experience.
+![Showcase](./image.png)
 
 ## 🌟 Features
 
